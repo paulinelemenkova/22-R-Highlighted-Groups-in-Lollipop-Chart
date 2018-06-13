@@ -12,6 +12,7 @@ library(tidyverse)
 	# шаг-2  Create data / создаем короткий датафрейм всего из 3 значений (value - длина лепестка круга)
 data<- data.frame(x = MDF$profile, y = MDF$tg_angle)
 
+# неотсортированный график с разношерстыми леденцами
 p_unsort<- ggplot(data, aes(x=x, y=y)) +
    geom_segment( aes(x=x, xend=x, y=0, yend=y), color="skyblue", size=0.5) +
    geom_point( color="slateblue1", size=4) +
@@ -28,10 +29,10 @@ p_unsort<- ggplot(data, aes(x=x, y=y)) +
  ylab(expression(tg*degree*(A/H)))
 p_unsort
 
-
+# рисуем скобки дял групп
 library(ggsignif)
 
-# Reorder
+# Reorder теперь сортируем леденцы
 p_sort <- data %>%
   arrange(y) %>%
   mutate(x=factor(x,x)) %>%
