@@ -1,7 +1,7 @@
 # Круговая диаграмма пакетом tidyverse // Circular Barplot 
 
 # ЧАСТЬ-1. готовим датафрейм. 
-	# шаг-1. вчитываем таблицу с данными. делаем из нее исходный датафрейм. чистим датафрейм от NA
+# шаг-1. вчитываем таблицу с данными. делаем из нее исходный датафрейм. чистим датафрейм от NA
 MDepths <- read.csv("Morphology.csv", header=TRUE, sep = ",")
 MDF <- na.omit(MDepths) 
 row.has.na <- apply(MDF, 1, function(x){any(is.na(x))}) 
@@ -9,10 +9,10 @@ sum(row.has.na)
 head(MDF)
 
 library(tidyverse)
-	# шаг-2  Create data / создаем короткий датафрейм всего из 3 значений (value - длина лепестка круга)
+# шаг-2  Create data / создаем короткий датафрейм всего из 3 значений (value - длина лепестка круга)
 data<- data.frame(x = MDF$profile, y = MDF$tg_angle)
 
-# неотсортированный график с разношерстыми леденцами
+# шаг-3. неотсортированный график с разношерстыми леденцами
 p_unsort<- ggplot(data, aes(x=x, y=y)) +
    geom_segment( aes(x=x, xend=x, y=0, yend=y), color="skyblue", size=0.5) +
    geom_point( color="slateblue1", size=4) +
@@ -29,10 +29,9 @@ p_unsort<- ggplot(data, aes(x=x, y=y)) +
  ylab(expression(tg*degree*(A/H)))
 p_unsort
 
-# рисуем скобки дял групп
+# шаг-4. Reorder рисуем скобки для групп и сортируем леденцы по группам
 library(ggsignif)
 
-# Reorder теперь сортируем леденцы
 p_sort <- data %>%
   arrange(y) %>%
   mutate(x=factor(x,x)) %>%
@@ -57,15 +56,14 @@ p_sort <- data %>%
     ) +
   xlab("Profile Nr.") +
   ylab(expression(tg*degree*(A/H)))
- p_sort
- 
+ p_sort 
 
- 
+# шаг-5. собираем оба графика на один рисунок  
  figure <-plot_grid(p_unsort, p_sort, labels = c("1", "2"), ncol = 2, nrow = 1)
  figure
  
-	# шаг-11. добавляем к ним общий заголовок, подзаголовок и нижнюю сноску.
-Ranking <- figure +						
+# шаг-6. добавляем к ним общий заголовок, подзаголовок и нижнюю сноску.
+Ranking <- figure +					
 	labs(title="马里亚纳海沟。剖面1-25。Mariana Trench, Profiles Nr.1-25.", 
 	subtitle = "统计图表。地貌聚类分析, 条形图。Geomorphological Analysis: Ranking of Profiles by Angle Steepness (Left: Unsorted; Right: Sorted and Grouped)",
 	caption = "Statistics Processing and Graphs: R Programming. Data Source: QGIS") +
